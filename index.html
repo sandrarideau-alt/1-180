@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>1•180 — iLATITUDE</title>
+<style>
+:root{--bg:#f4f0e8;--paper:#fffdf7;--ink:#272727;--muted:#777;--accent:#d9d3c8}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid #ddd;background:#fff}
+.brand{font-size:28px;font-weight:700;letter-spacing:.03em}.ilatitude{font-size:14px;letter-spacing:.18em}
+main{max-width:1100px;margin:0 auto;padding:24px}.intro{text-align:center;margin:12px 0 24px}
+.intro h1{margin:.2em 0;font-size:clamp(26px,5vw,44px)}.intro p{color:var(--muted)}
+.reader{display:grid;grid-template-columns:44px 1fr 44px;gap:12px;align-items:center}
+.book{display:grid;grid-template-columns:1fr 1fr;perspective:1800px;min-height:560px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.12))}
+.page{background:var(--paper);padding:34px;position:relative;border:1px solid #e7e0d4;transition:transform .45s ease,opacity .45s ease}
+.left{border-radius:12px 0 0 12px;transform-origin:right center}.right{border-radius:0 12px 12px 0;transform-origin:left center}
+.page.turn{transform:rotateY(-9deg);opacity:.75}.no{position:absolute;bottom:16px;color:#999}.left .no{left:18px}.right .no{right:18px}
+.note{min-height:110px;border:1px dashed #bdb5a9;border-radius:10px;padding:12px;margin-top:18px;background:#fff}
+.check{display:block;margin:14px 0}.nav{border:0;background:#fff;border-radius:50%;width:44px;height:44px;font-size:30px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.toolbar{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:18px 0}
+.toolbar button,.sumario button{border:1px solid #cfc7ba;background:#fff;border-radius:10px;padding:10px 14px}
+.sumario{max-width:520px;margin:0 auto;background:#fff;padding:18px;border-radius:12px}
+.sumario button{display:block;width:100%;margin:8px 0;text-align:left}
+footer{text-align:center;color:#888;padding:26px}
+@media(max-width:760px){.reader{grid-template-columns:34px 1fr 34px}.book{grid-template-columns:1fr;min-height:520px}.left{display:none}.right{border-radius:12px}.page{padding:24px}.nav{width:34px;height:34px;font-size:24px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">1•180</div><div class="ilatitude">iLATITUDE</div></header>
+<main>
+<section class="intro"><div>CUADERNO PROFESIONAL · PROTOTIPO WEB</div><h1>Tu integración, página a página.</h1><p>Prueba técnica de lectura interactiva. El contenido definitivo se añadirá después.</p></section>
+<section class="reader">
+<button class="nav" id="prev" aria-label="Anterior">‹</button>
+<div class="book">
+<article class="page left" id="left"><span class="no" id="ln">1</span><h2 id="lt">Bienvenida</h2><p id="lp">Primer paso de tu recorrido profesional.</p><div class="note" contenteditable="true">Escribe aquí…</div></article>
+<article class="page right" id="right"><span class="no" id="rn">2</span><h2 id="rt">Primeros pasos</h2><label class="check"><input type="checkbox"> He leído mi hoja de ruta</label><label class="check"><input type="checkbox"> He definido mi prioridad</label><div class="note" contenteditable="true">Notas…</div></article>
+</div>
+<button class="nav" id="next" aria-label="Siguiente">›</button>
+</section>
+<div class="toolbar"><button id="toc">Sumario</button><button id="fs">Pantalla completa</button><span id="label">Páginas 1–2</span></div>
+<section class="sumario" id="sumario" hidden><h2>Sumario</h2><button data-i="0">Inicio · páginas 1–2</button><button data-i="1">Integración · páginas 3–4</button><button data-i="2">Progreso · páginas 5–6</button></section>
+</main><footer>iLATITUDE · 1•180</footer>
+<script>
+const spreads=[
+["Bienvenida","Primer paso de tu recorrido profesional.","Primeros pasos"],
+["Mi integración","Observo, comprendo y encuentro mis repères.","Mes objectifs"],
+["Mon progrès","Je mesure ce qui évolue et ce qui reste à travailler.","Bilan d'étape"]
+];
+let i=0;const q=s=>document.querySelector(s);
+function draw(){const [a,b,c]=spreads[i];q("#lt").textContent=a;q("#lp").textContent=b;q("#rt").textContent=c;q("#ln").textContent=i*2+1;q("#rn").textContent=i*2+2;q("#label").textContent="Páginas "+(i*2+1)+"–"+(i*2+2);for(const id of["#left","#right"]){q(id).classList.add("turn");setTimeout(()=>q(id).classList.remove("turn"),220)}}
+q("#next").onclick=()=>{i=Math.min(spreads.length-1,i+1);draw()};q("#prev").onclick=()=>{i=Math.max(0,i-1);draw()};
+q("#toc").onclick=()=>q("#sumario").hidden=!q("#sumario").hidden;
+document.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{i=Number(b.dataset.i);draw();q("#sumario").hidden=true});
+q("#fs").onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+</script>
+</body></html>
